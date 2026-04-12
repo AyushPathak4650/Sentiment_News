@@ -1,11 +1,1 @@
 python-3.11
-
-django>=4.2
-requests>=2.28
-python-decouple>=3.6
-celery>=5.2
-django-celery-beat>=2.5
-redis>=4.5
-django-redis>=0.6
-nltk>=3.8
-gunicorn>=21.0

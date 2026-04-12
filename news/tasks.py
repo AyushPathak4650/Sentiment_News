@@ -12,8 +12,9 @@ def fetch_and_save_articles(self):
         from news.helpers import fetch_news, analyze_sentiment
         from news.models import NewsArticle
         from django.utils.dateparse import parse_datetime
+        from django.conf import settings
         
-        query = getattr(self, 'NEWS_QUERY', 'india') if hasattr(self, 'NEWS_QUERY') else 'india'
+        query = getattr(settings, 'NEWS_QUERY', 'india')
         days = 1
         
         articles = fetch_news(query, days=days)

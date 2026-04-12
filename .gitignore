@@ -48,3 +48,6 @@ nltk_data/
 
 # Logs
 *.log
+
+# Staticfiles (collected by whitenoise)
+staticfiles/

@@ -39,7 +39,11 @@ def fetch_news(query, days=3):
     today = datetime.date.today()
     from_date = today - datetime.timedelta(days=days)
     
-    NEWS_API_KEY = config('NEWS_API_KEY')
+    NEWS_API_KEY = config('NEWS_API_KEY', default='')
+    if not NEWS_API_KEY:
+        logger.warning("NEWS_API_KEY not configured")
+        return []
+    
     BASE_URL = 'https://newsapi.org/v2/'
     
     url = f"{BASE_URL}everything?q={query}&from={from_date}&to={today}&sortBy=publishedAt&apiKey={NEWS_API_KEY}"
@@ -59,7 +63,10 @@ def fetch_news(query, days=3):
 
 
 def fetch_by_category(category='general'):
-    NEWS_API_KEY = config('NEWS_API_KEY')
+    NEWS_API_KEY = config('NEWS_API_KEY', default='')
+    if not NEWS_API_KEY:
+        return []
+    
     BASE_URL = 'https://newsapi.org/v2/'
     
     url = f"{BASE_URL}everything?q={category}&sortBy=publishedAt&apiKey={NEWS_API_KEY}"
