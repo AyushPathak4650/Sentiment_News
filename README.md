@@ -1,31 +1,43 @@
-# News Insight
+# News Aggregator with Sentiment Analysis
 
-A production-ready Django news aggregator with sentiment analysis and automatic news fetching.
+A production-grade full-stack web application that aggregates real-time news from global sources and performs automated sentiment analysis using Natural Language Processing.
 
-## Features
+## 🔧 Tech Stack
 
-- Real-time news fetching from NewsAPI
-- Sentiment analysis (Positive/Negative/Neutral) using NLTK VADER
-- Automatic periodic fetching with Celery Beat
-- Clean dashboard with Chart.js visualization
-- Redis caching support
-- Error handling and custom error pages
-- Production-ready settings
+| Layer | Technologies |
+|-------|-------------|
+| **Backend** | Django 5.x, Python |
+| **Task Queue** | Celery + Redis |
+| **NLP** | NLTK VADER, TextBlob |
+| **Database** | PostgreSQL (Production) / SQLite (Development) |
+| **API** | NewsAPI |
+| **Deployment** | Render, Gunicorn, WhiteNoise |
 
-## Tech Stack
+## 🚀 Key Features
 
-- Django 5.x
-- Celery + Redis
-- NLTK for sentiment analysis
-- Bootstrap 5 for UI
+- **Real-time News Aggregation** - Fetches articles from 50+ global sources via NewsAPI
+- **Automated Sentiment Analysis** - Classifies articles as Positive/Negative/Neutral using VADER lexicon
+- **Async Background Processing** - Celery Beat scheduler for continuous news fetching every 5 minutes
+- **Interactive Dashboard** - Filter, search, and visualize sentiment trends
+- **Redis Caching** - Performance optimization for database queries
+- **Production-Ready** - Whitenoise static file serving, PostgreSQL support, error handling
 
-## Quick Start (Local)
+## 📊 Architecture
+
+```
+[NewsAPI] → [Celery Worker] → [Sentiment Analysis (NLP)] → [PostgreSQL]
+                                                          ↓
+[User] ← [Django Views] ← [Redis Cache] ← [Dashboard UI]
+```
+
+## 💻 Local Setup
 
 ```bash
-# Clone and navigate
+# Clone and setup
+git clone https://github.com/yourusername/SentimentNews.git
 cd SentimentNews
 
-# Create virtual environment
+# Virtual environment
 python -m venv .venv
 source .venv/bin/activate  # Linux/Mac
 .venv\Scripts\activate     # Windows
@@ -33,85 +45,35 @@ source .venv/bin/activate  # Linux/Mac
 # Install dependencies
 pip install -r requirements.txt
 
-# Copy environment file
+# Configure
 cp .env.example .env
+# Add your NEWS_API_KEY at https://newsapi.org
 
-# Edit .env with your NEWS_API_KEY
-# Get free API key at https://newsapi.org
-
-# Run migrations
+# Run
 python manage.py migrate
-
-# Run the server
 python manage.py runserver
 ```
 
-Visit http://127.0.0.1:8000
+## 🌍 Live Demo
 
-## Running Background Tasks (Local)
+**https://sentiment-news-ajit.onrender.com**
 
-```bash
-# Terminal 1 - Django server
-python manage.py runserver
+## 📝 Environment Variables
 
-# Terminal 2 - Celery worker (Windows requires --pool=solo)
-celery -A core worker -l info --pool=solo
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `NEWS_API_KEY` | API key from newsapi.org | Yes |
+| `SECRET_KEY` | Django secret key | Yes |
+| `DEBUG` | Set to `False` for production | No |
+| `DATABASE_URL` | PostgreSQL connection string | Production |
 
-# Terminal 3 - Celery Beat scheduler
-celery -A core beat -l info
-```
+## ⭐ Highlights
 
-## Deploy to Render
+- **Modular Architecture** - Clean separation between ingestion, processing, storage layers
+- **Async Task Scheduling** - Celery Beat for periodic background jobs
+- **Sentiment Classification** - Rule-based NLP using VADER (Valence Aware Dictionary)
+- **Production Deployment** - Render-ready with PostgreSQL, Redis, Gunicorn
 
-### 1. Push to GitHub
-Commit all files and push to a GitHub repository.
-
-### 2. Create Render Account
-Sign up at https://render.com
-
-### 3. Create Web Service
-- Dashboard → New → Web Service
-- Connect your GitHub repo
-- Set root directory (if needed)
-- Build command: `pip install -r requirements.txt`
-- Start command: `gunicorn core.wsgi --bind 0.0.0.0:$PORT`
-
-### 4. Add Environment Variables
-In Render dashboard, add these env vars:
-```
-NEWS_API_KEY=your_newsapi_key
-SECRET_KEY=generate_a_strong_key
-DEBUG=False
-ALLOWED_HOSTS=your-app.onrender.com
-```
-
-### 5. Add Redis (Background Worker)
-- Dashboard → New → Redis
-- Note the Redis connection URL
-
-### 6. Add Celery Worker (Optional)
-- Dashboard → New → Background Worker
-- Command: `celery -A core worker -l info`
-- Add Redis URL to env vars
-
-## Manual Task Trigger
-
-```bash
-python manage.py shell -c "from news.tasks import fetch_and_save_articles; fetch_and_save_articles()"
-```
-
-## Configuration
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEWS_API_KEY` | NewsAPI.org key | Required |
-| `SECRET_KEY` | Django secret | Auto-generated |
-| `DEBUG` | Debug mode | True |
-| `ALLOWED_HOSTS` | Allowed hosts | localhost,127.0.0.1 |
-| `CELERY_BROKER_URL` | Redis URL | redis://localhost:6379 |
-| `NEWS_QUERY` | Search query | india |
-| `REDIS_URL` | Redis cache | redis://127.0.0.1:6379/1 |
-
-## License
+## 📄 License
 
 MIT
