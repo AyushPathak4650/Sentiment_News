@@ -83,18 +83,18 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    {% with total=stats.positive|add:stats.negative|add:stats.neutral %}
                     <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-success" style="width: {% if total > 0 %}{% widthratio stats.positive total 100 }}{% else %}0{% endif %}%"></div>
-                        <div class="progress-bar bg-danger" style="width: {% if total > 0 %}{% widthratio stats.negative total 100 }}{% else %}0{% endif %}%"></div>
-                        <div class="progress-bar bg-warning" style="width: {% if total > 0 %}{% widthratio stats.neutral total 100 }}{% else %}0{% endif %}%"></div>
+                        {% with total=stats.positive|add:stats.negative|add:stats.neutral %}
+                        <div class="progress-bar bg-success" style="width: {% if total > 0 %}{{ stats.positive|floatformat:0|div:total|mul:100|floatformat:0 }}%{% else %}0%{% endif %}"></div>
+                        <div class="progress-bar bg-danger" style="width: {% if total > 0 %}{{ stats.negative|floatformat:0|div:total|mul:100|floatformat:0 }}%{% else %}0%{% endif %}"></div>
+                        <div class="progress-bar bg-warning" style="width: {% if total > 0 %}{{ stats.neutral|floatformat:0|div:total|mul:100|floatformat:0 }}%{% else %}0%{% endif %}"></div>
+                        {% endwith %}
                     </div>
                     <div class="d-flex justify-content-between text-secondary small">
                         <span>{{ stats.positive }} Positive</span>
                         <span>{{ stats.negative }} Negative</span>
                         <span>{{ stats.neutral }} Neutral</span>
                     </div>
-                    {% endwith %}
                 </div>
             </div>
         </div>
