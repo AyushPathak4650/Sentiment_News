@@ -11,16 +11,15 @@ SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-produc
 
 DEBUG = config('DEBUG', default='True').lower() == 'true'
 
-# Allow all hosts in debug, otherwise read from config or fallback to render domain pattern
+env_allowed_hosts = config('ALLOWED_HOSTS', default='')
+
 if DEBUG:
     ALLOWED_HOSTS = ['*']
+elif env_allowed_hosts:
+    ALLOWED_HOSTS = [h.strip() for h in env_allowed_hosts.split(',') if h.strip()]
 else:
-    allowed_hosts = config('ALLOWED_HOSTS', default='')
-    if allowed_hosts:
-        ALLOWED_HOSTS = [h.strip() for h in allowed_hosts.split(',') if h.strip()]
-    else:
-        # Default to common render patterns if not set
-        ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*.onrender.com']
+    # Default for production when ALLOWED_HOSTS not set
+    ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'sentiment-news-ajit.onrender.com']
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
