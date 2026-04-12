@@ -1,0 +1,245 @@
+:root {
+    --primary: #1e293b;
+    --secondary: #64748b;
+    --border: #e2e8f0;
+    --surface: #ffffff;
+    --bg: #f8fafc;
+    --success: #22c55e;
+    --danger: #ef4444;
+    --warning: #eab308;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: var(--bg);
+    color: #334155;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* Navbar */
+.navbar {
+    background: var(--surface) !important;
+    border-bottom: 1px solid var(--border);
+}
+
+.navbar-brand {
+    font-weight: 700;
+    font-size: 1.25rem;
+    color: var(--primary) !important;
+}
+
+.nav-link {
+    color: var(--secondary) !important;
+    font-weight: 500;
+    font-size: 0.9rem;
+    padding: 0.5rem 1rem !important;
+}
+
+.nav-link:hover {
+    color: var(--primary) !important;
+}
+
+/* Cards */
+.news-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--surface);
+    transition: box-shadow 0.25s ease, transform 0.25s ease;
+    overflow: hidden;
+}
+
+/* Sentiment shadows */
+.card-positive {
+    box-shadow: 0 4px 20px rgba(34, 197, 94, 0.15);
+}
+.card-positive:hover {
+    box-shadow: 0 8px 30px rgba(34, 197, 94, 0.25);
+}
+
+.card-negative {
+    box-shadow: 0 4px 20px rgba(239, 68, 68, 0.15);
+}
+.card-negative:hover {
+    box-shadow: 0 8px 30px rgba(239, 68, 68, 0.25);
+}
+
+.card-neutral {
+    box-shadow: 0 4px 20px rgba(234, 179, 8, 0.15);
+}
+.card-neutral:hover {
+    box-shadow: 0 8px 30px rgba(234, 179, 8, 0.25);
+}
+
+.news-card:hover {
+    transform: translateY(-3px);
+}
+
+.card-img-top {
+    height: 160px;
+    object-fit: cover;
+    width: 100%;
+}
+
+.card-body {
+    padding: 1rem;
+}
+
+.card-title {
+    font-weight: 600;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    color: var(--primary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.card-text {
+    font-size: 0.85rem;
+    color: var(--secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Source tag */
+.source-tag {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--secondary);
+    background: var(--bg);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
+}
+
+/* Sentiment circles */
+.sentiment-circle {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.25rem;
+}
+
+.bg-success-subtle { background-color: rgba(34, 197, 94, 0.1); }
+.bg-danger-subtle { background-color: rgba(239, 68, 68, 0.1); }
+.bg-warning-subtle { background-color: rgba(234, 179, 8, 0.1); }
+
+.text-success { color: var(--success) !important; }
+.text-danger { color: var(--danger) !important; }
+.text-warning { color: var(--warning) !important; }
+
+/* Chart */
+.chart-wrapper {
+    height: 200px;
+    margin: 0 auto;
+}
+
+/* Stats */
+.stat-item {
+    background: var(--bg);
+    text-align: center;
+}
+
+.stat-item h4 {
+    color: var(--primary);
+    margin-bottom: 0.25rem;
+}
+
+/* Buttons */
+.btn-dark {
+    background-color: var(--primary);
+    border-color: var(--primary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+}
+
+.btn-dark:hover {
+    background-color: #0f172a;
+    border-color: #0f172a;
+}
+
+/* Pagination */
+.pagination {
+    gap: 4px;
+}
+
+.page-link {
+    color: var(--secondary);
+    border: none;
+    background: transparent;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.875rem;
+    border-radius: 6px;
+}
+
+.page-item.active .page-link {
+    background-color: var(--primary);
+    color: #fff;
+}
+
+.page-link:hover {
+    background: var(--border);
+    color: var(--primary);
+}
+
+/* Footer */
+footer {
+    background: var(--surface);
+    border-top: 1px solid var(--border);
+}
+
+/* Form */
+.form-control {
+    border-color: var(--border);
+    border-radius: 6px;
+    font-size: 0.875rem;
+}
+
+.form-control:focus {
+    border-color: var(--primary);
+    box-shadow: none;
+}
+
+/* Progress bars */
+.progress {
+    border-radius: 4px;
+    background: var(--bg);
+}
+
+.progress-bar {
+    border-radius: 4px;
+}
+
+.bg-success { background-color: var(--success) !important; }
+.bg-danger { background-color: var(--danger) !important; }
+.bg-warning { background-color: var(--warning) !important; }
+
+/* Responsive */
+@media (max-width: 768px) {
+    .card-img-top {
+        height: 140px;
+    }
+    
+    .sentiment-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
