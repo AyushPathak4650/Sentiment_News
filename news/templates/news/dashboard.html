@@ -75,22 +75,26 @@
                     </div>
                     <div class="col-6">
                         <div class="stat-item p-3 rounded-3 bg-light">
-                            <h4 class="fw-bold">{{ stats.positive|add:stats.negative|add:stats.neutral }}</h4>
+                            {% with total=stats.positive|add:stats.negative|add:stats.neutral %}
+                            <h4 class="fw-bold">{% if total > 0 %}{{ total }}{% else %}0{% endif %}</h4>
+                            {% endwith %}
                             <span class="text-secondary small">Analyzed (100)</span>
                         </div>
                     </div>
                 </div>
                 <div class="mt-4">
+                    {% with total=stats.positive|add:stats.negative|add:stats.neutral %}
                     <div class="progress mb-2" style="height: 8px;">
-                        <div class="progress-bar bg-success" style="width: {% widthratio stats.positive 100 1 %}%"></div>
-                        <div class="progress-bar bg-danger" style="width: {% widthratio stats.negative 100 1 %}%"></div>
-                        <div class="progress-bar bg-warning" style="width: {% widthratio stats.neutral 100 1 %}%"></div>
+                        <div class="progress-bar bg-success" style="width: {% if total > 0 %}{% widthratio stats.positive total 100 }}{% else %}0{% endif %}%"></div>
+                        <div class="progress-bar bg-danger" style="width: {% if total > 0 %}{% widthratio stats.negative total 100 }}{% else %}0{% endif %}%"></div>
+                        <div class="progress-bar bg-warning" style="width: {% if total > 0 %}{% widthratio stats.neutral total 100 }}{% else %}0{% endif %}%"></div>
                     </div>
                     <div class="d-flex justify-content-between text-secondary small">
                         <span>{{ stats.positive }} Positive</span>
                         <span>{{ stats.negative }} Negative</span>
                         <span>{{ stats.neutral }} Neutral</span>
                     </div>
+                    {% endwith %}
                 </div>
             </div>
         </div>
@@ -124,6 +128,12 @@
                     alt="{{ article.title|escape }}"
                     loading="lazy"
                     onerror="this.src='https://placehold.co/600x350?text=No+Image'">
+                <span class="sentiment-pill 
+                    {% if article.sentiment == 'Positive' %}pill-positive
+                    {% elif article.sentiment == 'Negative' %}pill-negative
+                    {% else %}pill-neutral{% endif %}">
+                    {{ article.sentiment }}
+                </span>
             </div>
             <div class="card-body p-3">
                 <div class="d-flex justify-content-between align-items-center mb-2">

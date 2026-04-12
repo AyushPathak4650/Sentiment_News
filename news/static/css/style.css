@@ -231,6 +231,34 @@ footer {
 .bg-danger { background-color: var(--danger) !important; }
 .bg-warning { background-color: var(--warning) !important; }
 
+/* Sentiment pill on cards */
+.sentiment-pill {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.pill-positive {
+    background-color: var(--success);
+    color: #fff;
+}
+
+.pill-negative {
+    background-color: var(--danger);
+    color: #fff;
+}
+
+.pill-neutral {
+    background-color: var(--warning);
+    color: #fff;
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .card-img-top {
