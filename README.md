@@ -32,28 +32,7 @@ This platform demonstrates end-to-end implementation of a data pipeline that:
 
 ## 🏗 Architecture
 
-```
-┌─────────────────┐      ┌──────────────────┐
-│    NewsAPI      │─────▶│  Celery Worker    │
-│  (External)     │      │  (Task Queue)     │
-└─────────────────┘      └────────┬─────────┘
-                                   │
-                            ┌──────▼─────────┐
-                            │  VADER NLP    │
-                            │ Sentiment     │
-                            │ Classification│
-                            └──────┬────────┘
-                                   │
-                            ┌──────▼─────────┐
-                            │  PostgreSQL    │
-                            │   Database     │
-                            └──────┬─────────┘
-                                   │
-┌─────────────────┐      ┌────────▼─────────┐
-│   End User      │◀─────│   Django Views    │
-│  (Browser)     │      │ (MVT Architecture) │
-└─────────────────┘      └───────────────────┘
-```
+![Architecture Diagram](news_sentiment_architecture.svg)
 
 ## 🔬 Technical Implementation
 
