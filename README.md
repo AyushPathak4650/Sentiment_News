@@ -32,7 +32,7 @@ This platform demonstrates end-to-end implementation of a data pipeline that:
 
 ## 🏗 Architecture
 
-![Architecture Diagram](news_sentiment_architecture.png)
+![Architecture Diagram](architecture.png)
 
 ## 🔬 Technical Implementation
 
