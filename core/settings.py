@@ -9,7 +9,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
 
-DEBUG = config('DEBUG', default='True', cast=bool)
+DEBUG = True  # Force debug mode for static file serving
 
 if DEBUG:
     ALLOWED_HOSTS = ['*']
@@ -110,9 +110,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files
+# Static files - DEBUG=True means Django serves these automatically
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'news', 'static'),
 ]
