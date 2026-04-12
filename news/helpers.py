@@ -1,3 +1,4 @@
+import nltk
 from decouple import config
 import requests
 import datetime
@@ -5,21 +6,23 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+# Download VADER lexicon
 try:
+    nltk.download('vader_lexicon', quiet=True)
     from nltk.sentiment.vader import SentimentIntensityAnalyzer
     sia = SentimentIntensityAnalyzer()
-except:
+except Exception as e:
+    logger.warning(f"Failed to load VADER: {e}")
     sia = None
 
+
 def analyze_sentiment(text):
-    if not text:
-        return "Neutral"
-    
-    if sia is None:
+    if not text or not sia:
         return "Neutral"
     
     try:
-        scores = sia.polarity_scores(text)
+        text_to_analyze = text[:1000] if len(text) > 1000 else text
+        scores = sia.polarity_scores(text_to_analyze)
         compound = scores['compound']
         
         if compound >= 0.05:

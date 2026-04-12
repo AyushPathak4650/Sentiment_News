@@ -69,3 +69,20 @@ def fetch_and_save_articles(self):
     except Exception as e:
         logger.error(f"Task failed: {e}")
         raise self.retry(exc=e, countdown=60)
+
+
+@shared_task
+def reanalyze_all_articles():
+    """Re-analyze all existing articles for sentiment."""
+    from news.helpers import analyze_sentiment
+    from news.models import NewsArticle
+    
+    articles = NewsArticle.objects.all()
+    count = 0
+    for article in articles:
+        if article.description:
+            new_sentiment = analyze_sentiment(article.description[:1000])
+            article.sentiment = new_sentiment
+            article.save()
+            count += 1
+    return f'Re-analyzed {count} articles'
