@@ -9,12 +9,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
 
-DEBUG = config('DEBUG', default=True, cast=bool)
+DEBUG = config('DEBUG', default='True').lower() == 'true'
 
+# Allow all hosts in debug, otherwise read from config or fallback to render domain pattern
 if DEBUG:
     ALLOWED_HOSTS = ['*']
 else:
-    ALLOWED_HOSTS = [h.strip() for h in config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',') if h.strip()]
+    allowed_hosts = config('ALLOWED_HOSTS', default='')
+    if allowed_hosts:
+        ALLOWED_HOSTS = [h.strip() for h in allowed_hosts.split(',') if h.strip()]
+    else:
+        # Default to common render patterns if not set
+        ALLOWED_HOSTS = ['localhost', '127.0.0.1', '*.onrender.com']
 
 if not DEBUG:
     SECURE_BROWSER_XSS_FILTER = True
