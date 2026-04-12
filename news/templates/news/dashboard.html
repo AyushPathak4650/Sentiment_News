@@ -84,10 +84,10 @@
                 </div>
                 <div class="mt-4">
                     <div class="progress mb-2" style="height: 8px;">
-                        {% with total=stats.positive|add:stats.negative|add:stats.neutral %}
-                        <div class="progress-bar bg-success" style="width: {% if total > 0 %}{{ stats.positive|floatformat:0|div:total|mul:100|floatformat:0 }}%{% else %}0%{% endif %}"></div>
-                        <div class="progress-bar bg-danger" style="width: {% if total > 0 %}{{ stats.negative|floatformat:0|div:total|mul:100|floatformat:0 }}%{% else %}0%{% endif %}"></div>
-                        <div class="progress-bar bg-warning" style="width: {% if total > 0 %}{{ stats.neutral|floatformat:0|div:total|mul:100|floatformat:0 }}%{% else %}0%{% endif %}"></div>
+                        {% with total=stats.positive|add:stats.negative|add:stats.neutral|default:1 %}
+                        <div class="progress-bar bg-success" style="width: {% widthratio stats.positive total 100 %}%"></div>
+                        <div class="progress-bar bg-danger" style="width: {% widthratio stats.negative total 100 %}%"></div>
+                        <div class="progress-bar bg-warning" style="width: {% widthratio stats.neutral total 100 %}%"></div>
                         {% endwith %}
                     </div>
                     <div class="d-flex justify-content-between text-secondary small">
