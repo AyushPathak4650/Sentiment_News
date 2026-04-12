@@ -6,5 +6,5 @@ django-celery-beat>=2.5
 redis>=4.5
 django-redis>=0.6
 nltk>=3.8
-deep-translator>=1.8
 gunicorn>=21.0
+whitenoise>=6.0
