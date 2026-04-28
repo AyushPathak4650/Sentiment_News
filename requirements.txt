@@ -8,4 +8,5 @@ django-redis>=0.6
 nltk>=3.8
 gunicorn>=21.0
 whitenoise>=6.0
-dj-database-url>=2.0textblob>=0.17.1
+dj-database-url>=2.0
+textblob>=0.17.1
