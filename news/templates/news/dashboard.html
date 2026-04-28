@@ -1,80 +1,73 @@
 {% extends 'news/base.html' %}
 {% load static %}
 
-{% block content %}
+{% block title %}Dashboard - NewsSentinel{% endblock %}
 
-<div class="row g-4 mb-4">
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-3 text-center">
-                <span class="text-secondary small">Positive</span>
-                <h3 class="fw-bold mb-0 text-success">{{ stats.positive }}</h3>
-            </div>
-        </div>
+{% block content %}
+<div class="hero">
+    <h1>Real-Time <span class="text-primary">Sentiment Analysis</span></h1>
+    <p>AI-powered news aggregator with automatic sentiment classification</p>
+    
+    <form class="search-wrapper" method="get">
+        <i class="fa-solid fa-search search-icon"></i>
+        <input type="text" name="q" placeholder="Search news by keyword..." value="{{ search_term|default:'' }}">
+    </form>
+</div>
+
+<div class="stats-grid">
+    <div class="stat-card positive">
+        <div class="stat-number">{{ stats.positive }}</div>
+        <div class="stat-label">Positive</div>
     </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-3 text-center">
-                <span class="text-secondary small">Negative</span>
-                <h3 class="fw-bold mb-0 text-danger">{{ stats.negative }}</h3>
-            </div>
-        </div>
+    <div class="stat-card negative">
+        <div class="stat-number">{{ stats.negative }}</div>
+        <div class="stat-label">Negative</div>
     </div>
-    <div class="col-md-4">
-        <div class="card border-0 shadow-sm">
-            <div class="card-body p-3 text-center">
-                <span class="text-secondary small">Neutral</span>
-                <h3 class="fw-bold mb-0 text-warning">{{ stats.neutral }}</h3>
-            </div>
-        </div>
+    <div class="stat-card neutral">
+        <div class="stat-number">{{ stats.neutral }}</div>
+        <div class="stat-label">Neutral</div>
     </div>
 </div>
 
 <div class="row g-4 mb-4">
-    <div class="col-md-5">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <h6 class="text-uppercase text-secondary small fw-bold mb-3">Sentiment Distribution</h6>
-                <div class="chart-wrapper">
-                    <canvas id="sentimentChart"></canvas>
-                </div>
+    <div class="col-lg-5">
+        <div class="stat-card text-center p-4" style="background: var(--surface);">
+            <h6 class="text-uppercase text-secondary small fw-bold mb-3">Sentiment Distribution</h6>
+            <div class="chart-wrapper" style="height: 200px;">
+                <canvas id="sentimentChart"></canvas>
             </div>
         </div>
     </div>
-    <div class="col-md-7">
-        <div class="card border-0 shadow-sm h-100">
-            <div class="card-body p-4">
-                <h6 class="text-uppercase text-secondary small fw-bold mb-3">Database Stats</h6>
-                <div class="row g-3">
-                    <div class="col-6">
-                        <div class="stat-item p-3 rounded-3 bg-light">
-                            <h4 class="fw-bold">{{ total_articles|default:0 }}</h4>
-                            <span class="text-secondary small">Total Articles</span>
-                        </div>
-                    </div>
-                    <div class="col-6">
-                        <div class="stat-item p-3 rounded-3 bg-light">
-                            {% with total=stats.positive|add:stats.negative|add:stats.neutral|default:1 %}
-                            <h4 class="fw-bold">{{ total }}</h4>
-                            {% endwith %}
-                            <span class="text-secondary small">Analyzed (100)</span>
-                        </div>
+    <div class="col-lg-7">
+        <div class="stat-card text-center p-4" style="background: var(--surface);">
+            <h6 class="text-uppercase text-secondary small fw-bold mb-3">Database Overview</h6>
+            <div class="row g-3 mb-3">
+                <div class="col-6">
+                    <div class="p-3 rounded-3" style="background: var(--bg);">
+                        <h3 class="fw-bold mb-0" style="color: var(--accent);">{{ total_articles|default:0 }}</h3>
+                        <span class="text-secondary small">Total Articles</span>
                     </div>
                 </div>
-                <div class="mt-4">
+                <div class="col-6">
                     {% with total=stats.positive|add:stats.negative|add:stats.neutral|default:1 %}
-                    <div class="progress mb-2" style="height: 6px;">
-                        <div class="progress-bar bg-success" style="width: {% widthratio stats.positive total 100 %}%"></div>
-                        <div class="progress-bar bg-danger" style="width: {% widthratio stats.negative total 100 %}%"></div>
-                        <div class="progress-bar bg-warning" style="width: {% widthratio stats.neutral total 100 %}%"></div>
+                    <div class="p-3 rounded-3" style="background: var(--bg);">
+                        <h3 class="fw-bold mb-0">{{ total }}</h3>
+                        <span class="text-secondary small">Analyzed (100)</span>
                     </div>
                     {% endwith %}
-                    <div class="d-flex justify-content-between text-secondary small">
-                        <span><span class="text-success">●</span> {{ stats.positive }}</span>
-                        <span><span class="text-danger">●</span> {{ stats.negative }}</span>
-                        <span><span class="text-warning">●</span> {{ stats.neutral }}</span>
-                    </div>
                 </div>
+            </div>
+            {% with total=stats.positive|add:stats.negative|add:stats.neutral|default:1 %}
+            <div class="progress" style="height: 8px; border-radius: var(--radius-full);">
+                <div class="progress-bar" style="width: {% widthratio stats.positive total 100 %}%; background: var(--success);"></div>
+                <div class="progress-bar" style="width: {% widthratio stats.negative total 100 %}%; background: var(--danger);"></div>
+                <div class="progress-bar" style="width: {% widthratio stats.neutral total 100 %}%; background: var(--warning);"></div>
+            </div>
+            {% endwith %}
+            <div class="d-flex justify-content-between text-secondary small mt-2">
+                <span><span style="color: var(--success);">●</span> {{ stats.positive }}</span>
+                <span><span style="color: var(--danger);">●</span> {{ stats.negative }}</span>
+                <span><span style="color: var(--warning);">●</span> {{ stats.neutral }}</span>
             </div>
         </div>
     </div>
@@ -82,91 +75,89 @@
 
 <div class="d-flex justify-content-between align-items-center mb-4">
     <div>
-        <h4 class="fw-bold mb-1">Latest News</h4>
+        <h4 class="fw-bold mb-1" style="animation: fadeInUp 0.5s ease-out;">Latest News</h4>
         <p class="text-secondary small mb-0">
             {% if search_term %}Results for "{{ search_term }}"{% else %}Top 100 articles by date{% endif %}
         </p>
     </div>
-    <form class="d-flex" method="get">
-        <input type="text" name="q" class="form-control form-control-sm" 
-               placeholder="Search..." value="{{ search_term|default:'' }}">
-    </form>
 </div>
 
-<div class="row g-4">
+<div class="news-grid">
     {% for article in articles %}
-    <div class="col-md-6 col-lg-4">
-        {% if article.sentiment == 'Positive' %}
-        <article class="news-card card-positive h-100">
-        {% elif article.sentiment == 'Negative' %}
-        <article class="news-card card-negative h-100">
-        {% else %}
-        <article class="news-card card-neutral h-100">
-        {% endif %}
-            <div class="position-relative">
-                <img 
-                    src="{{ article.image_url|default:'https://placehold.co/600x350/1e293b/fff?text=News' }}" 
-                    class="card-img-top" 
-                    alt="{{ article.title|escape }}"
-                    loading="lazy"
-                    onerror="this.src='https://placehold.co/600x350/1e293b/fff?text=No+Image'">
-                <div class="card-sentiment 
-                    {% if article.sentiment == 'Positive' %}sentiment-positive
-                    {% elif article.sentiment == 'Negative' %}sentiment-negative
-                    {% else %}sentiment-neutral{% endif %}">
-                    {{ article.sentiment }}
-                </div>
-            </div>
-            <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="source-tag">{{ article.source_name }}</span>
-                    <span class="text-secondary small">{{ article.published_at|date:"M d" }}</span>
-                </div>
-                <h5 class="card-title mb-2">{{ article.title }}</h5>
-                <p class="card-text text-secondary small mb-3">
-                    {{ article.description|default:"No description available."|truncatewords:20 }}
-                </p>
-                <a href="{{ article.url }}" class="btn btn-sm btn-dark w-100" target="_blank" rel="noopener">
-                    Read Article
-                </a>
-            </div>
-        </article>
-    </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="text-center py-5">
-            <i class="fa-regular fa-newspaper fa-3x text-secondary mb-3"></i>
-            <h5 class="text-secondary">No articles found</h5>
-            <p class="text-secondary small">Run the fetcher or try a different search.</p>
+    {% if article.sentiment == 'Positive' %}
+    <article class="news-card positive">
+    {% elif article.sentiment == 'Negative' %}
+    <article class="news-card negative">
+    {% else %}
+    <article class="news-card neutral">
+    {% endif %}
+        <div class="card-image-wrapper">
+            <img 
+                src="{{ article.image_url|default:'https://placehold.co/600x350/1e293b/fff?text=News' }}" 
+                class="card-img-top" 
+                alt="{{ article.title|escape }}"
+                loading="lazy"
+                onerror="this.src='https://placehold.co/600x350/1e293b/fff?text=No+Image'">
+            <span class="sentiment-badge 
+                {% if article.sentiment == 'Positive' %}positive
+                {% elif article.sentiment == 'Negative' %}negative
+                {% else %}neutral{% endif %}">
+                {{ article.sentiment }}
+            </span>
         </div>
+        <div class="card-body">
+            <div class="card-meta mb-2">
+                <span class="source-tag">{{ article.source_name }}</span>
+                <span>{{ article.published_at|date:"M d" }}</span>
+            </div>
+            <h5 class="card-title">{{ article.title }}</h5>
+            <p class="card-text">
+                {{ article.description|default:"No description available."|truncatewords:20 }}
+            </p>
+            <a href="{{ article.url }}" class="btn btn-primary w-100" target="_blank" rel="noopener">
+                <i class="fa-solid fa-arrow-right me-2"></i>Read Article
+            </a>
+        </div>
+    </article>
+    {% empty %}
+    <div class="empty-state col-12">
+        <i class="fa-regular fa-newspaper"></i>
+        <h4 class="text-secondary mt-3">No articles yet</h4>
+        <p class="text-secondary">Articles will appear here after the first fetch.</p>
     </div>
     {% endfor %}
 </div>
 
 {% if articles.has_other_pages %}
-<nav class="mt-4">
-    <ul class="pagination justify-content-center">
-        {% if articles.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ articles.previous_page_number }}{% if search_term %}&q={{ search_term }}{% endif %}">&larr;</a>
-        </li>
-        {% endif %}
-        
-        {% for num in articles.paginator.page_range %}
-            {% if num >= articles.number|add:'-2' and num <= articles.number|add:'2' %}
-                <li class="page-item {% if num == articles.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}{% if search_term %}&q={{ search_term }}{% endif %}">{{ num }}</a>
-                </li>
+<div class="pagination-wrapper text-center">
+    <nav>
+        <ul class="pagination">
+            {% if articles.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.previous_page_number }}{% if search_term %}&q={{ search_term }}{% endif %}">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+            </li>
             {% endif %}
-        {% endfor %}
+            
+            {% for num in articles.paginator.page_range %}
+                {% if num >= articles.number|add:'-2' and num <= articles.number|add:'2' %}
+                    <li class="page-item {% if num == articles.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}{% if search_term %}&q={{ search_term }}{% endif %}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
 
-        {% if articles.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ articles.next_page_number }}{% if search_term %}&q={{ search_term }}{% endif %}">&rarr;</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
+            {% if articles.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.next_page_number }}{% if search_term %}&q={{ search_term }}{% endif %}">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endif %}
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -179,8 +170,9 @@ document.addEventListener('DOMContentLoaded', function() {
             labels: ['Positive', 'Negative', 'Neutral'],
             datasets: [{
                 data: [{{ stats.positive }}, {{ stats.negative }}, {{ stats.neutral }}],
-                backgroundColor: ['#22c55e', '#ef4444', '#eab308'],
-                borderWidth: 0
+                backgroundColor: ['#10b981', '#ef4444', '#f59e0b'],
+                borderWidth: 0,
+                hoverOffset: 4
             }]
         },
         options: {
@@ -189,10 +181,18 @@ document.addEventListener('DOMContentLoaded', function() {
             plugins: { 
                 legend: { 
                     position: 'bottom',
-                    labels: { padding: 20, usePointStyle: true }
+                    labels: { 
+                        padding: 20, 
+                        usePointStyle: true,
+                        font: { family: "'Plus Jakarta Sans', sans-serif" }
+                    }
                 } 
             },
-            cutout: '60%'
+            cutout: '65%',
+            animation: {
+                animateRotate: true,
+                animateScale: true
+            }
         }
     });
 });

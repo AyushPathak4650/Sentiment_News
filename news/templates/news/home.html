@@ -1,87 +1,89 @@
 {% extends 'news/base.html' %}
+{% load static %}
+
+{% block title %}All News - NewsSentinel{% endblock %}
 
 {% block content %}
-
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-        <h4 class="fw-bold mb-1">All Articles</h4>
-        <p class="text-secondary small mb-0">{{ total_count|default:0 }} articles in database</p>
-    </div>
+<div class="hero" style="padding: 2rem 0 1rem;">
+    <h1>All <span class="text-primary">Articles</span></h1>
+    <p>{{ total_count|default:0 }} articles in database</p>
 </div>
 
-<div class="row g-4">
+<div class="news-grid">
     {% for article in articles %}
-    <div class="col-md-6 col-lg-4">
-        {% if article.sentiment == 'Positive' %}
-        <article class="news-card card-positive h-100">
-        {% elif article.sentiment == 'Negative' %}
-        <article class="news-card card-negative h-100">
-        {% else %}
-        <article class="news-card card-neutral h-100">
-        {% endif %}
-            <div class="position-relative">
-                <img 
-                    src="{{ article.image_url|default:'https://placehold.co/600x350/1e293b/fff?text=News' }}" 
-                    class="card-img-top" 
-                    alt="{{ article.title|escape }}"
-                    loading="lazy"
-                    onerror="this.src='https://placehold.co/600x350/1e293b/fff?text=No+Image'">
-                <div class="card-sentiment 
-                    {% if article.sentiment == 'Positive' %}sentiment-positive
-                    {% elif article.sentiment == 'Negative' %}sentiment-negative
-                    {% else %}sentiment-neutral{% endif %}">
-                    {{ article.sentiment }}
-                </div>
-            </div>
-            <div class="card-body p-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="source-tag">{{ article.source_name }}</span>
-                    <span class="text-secondary small">{{ article.published_at|date:"M d" }}</span>
-                </div>
-                <h5 class="card-title mb-2">{{ article.title }}</h5>
-                <p class="card-text text-secondary small mb-3">
-                    {{ article.description|default:"Click to read more."|truncatewords:20 }}
-                </p>
-                <a href="{{ article.url }}" class="btn btn-sm btn-dark w-100" target="_blank" rel="noopener">
-                    Read Article
-                </a>
-            </div>
-        </article>
-    </div>
-    {% empty %}
-    <div class="col-12">
-        <div class="text-center py-5">
-            <i class="fa-regular fa-newspaper fa-3x text-secondary mb-3"></i>
-            <h5 class="text-secondary">No articles found</h5>
-            <p class="text-secondary small">Run the fetcher to populate articles.</p>
+    {% if article.sentiment == 'Positive' %}
+    <article class="news-card positive">
+    {% elif article.sentiment == 'Negative' %}
+    <article class="news-card negative">
+    {% else %}
+    <article class="news-card neutral">
+    {% endif %}
+        <div class="card-image-wrapper">
+            <img 
+                src="{{ article.image_url|default:'https://placehold.co/600x350/1e293b/fff?text=News' }}" 
+                class="card-img-top" 
+                alt="{{ article.title|escape }}"
+                loading="lazy"
+                onerror="this.src='https://placehold.co/600x350/1e293b/fff?text=No+Image'">
+            <span class="sentiment-badge 
+                {% if article.sentiment == 'Positive' %}positive
+                {% elif article.sentiment == 'Negative' %}negative
+                {% else %}neutral{% endif %}">
+                {{ article.sentiment }}
+            </span>
         </div>
+        <div class="card-body">
+            <div class="card-meta mb-2">
+                <span class="source-tag">{{ article.source_name }}</span>
+                <span>{{ article.published_at|date:"M d, Y" }}</span>
+            </div>
+            <h5 class="card-title">{{ article.title }}</h5>
+            <p class="card-text">
+                {{ article.description|default:"Click to read more."|truncatewords:20 }}
+            </p>
+            <a href="{{ article.url }}" class="btn btn-primary w-100" target="_blank" rel="noopener">
+                <i class="fa-solid fa-arrow-right me-2"></i>Read Article
+            </a>
+        </div>
+    </article>
+    {% empty %}
+    <div class="empty-state col-12">
+        <i class="fa-regular fa-newspaper"></i>
+        <h4 class="text-secondary mt-3">No articles yet</h4>
+        <p class="text-secondary">Articles will appear here after the first fetch.</p>
     </div>
     {% endfor %}
 </div>
 
 {% if articles.has_other_pages %}
-<nav class="mt-4">
-    <ul class="pagination justify-content-center">
-        {% if articles.has_previous %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ articles.previous_page_number }}">&larr;</a>
-        </li>
-        {% endif %}
-        
-        {% for num in articles.paginator.page_range %}
-            {% if num >= articles.number|add:'-2' and num <= articles.number|add:'2' %}
-                <li class="page-item {% if num == articles.number %}active{% endif %}">
-                    <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                </li>
+<div class="pagination-wrapper text-center">
+    <nav>
+        <ul class="pagination">
+            {% if articles.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.previous_page_number }}">
+                    <i class="fa-solid fa-chevron-left"></i>
+                </a>
+            </li>
             {% endif %}
-        {% endfor %}
+            
+            {% for num in articles.paginator.page_range %}
+                {% if num >= articles.number|add:'-2' and num <= articles.number|add:'2' %}
+                    <li class="page-item {% if num == articles.number %}active{% endif %}">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                    </li>
+                {% endif %}
+            {% endfor %}
 
-        {% if articles.has_next %}
-        <li class="page-item">
-            <a class="page-link" href="?page={{ articles.next_page_number }}">&rarr;</a>
-        </li>
-        {% endif %}
-    </ul>
-</nav>
+            {% if articles.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ articles.next_page_number }}">
+                    <i class="fa-solid fa-chevron-right"></i>
+                </a>
+            </li>
+            {% endif %}
+        </ul>
+    </nav>
+</div>
 {% endif %}
 {% endblock %}
