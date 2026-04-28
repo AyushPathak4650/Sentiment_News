@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from .models import NewsArticle
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import Http404
 
 
@@ -29,6 +29,13 @@ def dashboard(request):
         else:
             stats['neutral'] += 1
     
+    # Get top sources
+    sources = list(NewsArticle.objects.values('source_name').annotate(
+        count=Count('id')
+    ).order_by('-count')[:8])
+    source_names = [s['source_name'] for s in sources]
+    source_counts = [s['count'] for s in sources]
+    
     paginator = Paginator(latest_100, 9)
     page = request.GET.get('page', 1)
     
@@ -42,6 +49,8 @@ def dashboard(request):
         'stats': stats,
         'search_term': search_term,
         'total_articles': NewsArticle.objects.count(),
+        'source_names': source_names,
+        'source_counts': source_counts,
     }
     return render(request, 'news/dashboard.html', context)
 
