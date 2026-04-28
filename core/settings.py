@@ -147,9 +147,9 @@ CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
 
 CELERY_BEAT_SCHEDULE = {
-    'fetch-news-every-5-minutes': {
+    'fetch-news-every-2-hours': {
         'task': 'news.tasks.fetch_and_save_articles',
-        'schedule': 300.0,
+        'schedule': 7200.0,
     },
 }
 

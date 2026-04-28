@@ -44,7 +44,7 @@ def fetch_and_save_articles(self):
                 elif timezone.is_naive(published_at):
                     published_at = timezone.make_aware(published_at)
                 
-                sentiment = analyze_sentiment(description[:1000]) if description else 'Neutral'
+                sentiment_label, sentiment_score = analyze_sentiment(description[:1000]) if description else ('Neutral', 0.0)
                 
                 defaults = {
                     'title': title,
@@ -52,7 +52,8 @@ def fetch_and_save_articles(self):
                     'source_name': source_name,
                     'published_at': published_at,
                     'image_url': image_url,
-                    'sentiment': sentiment,
+                    'sentiment': sentiment_label,
+                    'sentiment_score': sentiment_score,
                 }
                 
                 obj, created = NewsArticle.objects.get_or_create(url=url, defaults=defaults)
@@ -82,8 +83,9 @@ def reanalyze_all_articles():
     count = 0
     for article in articles:
         if article.description:
-            new_sentiment = analyze_sentiment(article.description[:1000])
+            new_sentiment, sentiment_score = analyze_sentiment(article.description[:1000])
             article.sentiment = new_sentiment
+            article.sentiment_score = sentiment_score
             article.save()
             count += 1
     return f'Re-analyzed {count} articles'

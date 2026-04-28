@@ -55,9 +55,11 @@ CONTEXT_MODIFIERS = {
 
 
 def analyze_sentiment(text):
-    """Enhanced sentiment analysis combining VADER, TextBlob, and keyword boosting."""
+    """Enhanced sentiment analysis combining VADER, TextBlob, and keyword boosting.
+    Returns tuple: (sentiment_label, raw_score)
+    """
     if not text:
-        return "Neutral"
+        return ("Neutral", 0.0)
     
     text_lower = text.lower()[:1500]
     
@@ -98,10 +100,10 @@ def analyze_sentiment(text):
         combined_score *= 0.5
     
     if combined_score >= 0.03:
-        return "Positive"
+        return ("Positive", combined_score)
     elif combined_score <= -0.03:
-        return "Negative"
-    return "Neutral"
+        return ("Negative", combined_score)
+    return ("Neutral", combined_score)
 
 
 def fetch_news(query, days=3):
