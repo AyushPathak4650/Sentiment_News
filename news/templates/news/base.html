@@ -4,79 +4,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Real-time news sentiment analyzer">
-    <title>{% block title %}News Insight - Sentiment Analyzer{% endblock %}</title>
+    <meta name="description" content="News sentiment analyzer with automatic news fetching">
+    <title>{% block title %}News Insight{% endblock %}</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
 </head>
 <body>
+    
     <nav class="navbar navbar-expand-lg sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{% url 'dashboard' %}">
-                <i class="fa-regular fa-newspaper"></i>News Insight
+                <i class="fa-regular fa-newspaper me-2"></i>News Insight
             </a>
-            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">
-                            <i class="fa-solid fa-chart-pie me-1"></i>Dashboard
-                        </a>
+                        <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'news-home' %}">
-                            <i class="fa-regular fa-newspaper me-1"></i>All News
-                        </a>
+                        <a class="nav-link" href="{% url 'news-home' %}">All News</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <main>
-        {% block content %}{% endblock %}
+    <main class="py-4">
+        <div class="container">
+            {% block content %}{% endblock %}
+        </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <span class="footer-brand">
-                        <i class="fa-regular fa-newspaper me-2"></i>News Insight
-                    </span>
-                    <p class="mt-2 mb-0 text-muted">
-                        Real-time news sentiment analysis powered by AI.
-                    </p>
-                </div>
-                <div class="col-md-6 text-md-end">
-                    <p class="mb-0 text-muted">
-                        &copy; {% now "Y" %} News Insight. Powered by 
-                        <a href="https://newsapi.org" target="_blank">NewsAPI</a>.
-                    </p>
-                </div>
-            </div>
+    <footer class="py-3 mt-auto">
+        <div class="container text-center">
+            <p class="mb-0 text-secondary small">
+                &copy; {% now "Y" %} News Insight
+            </p>
         </div>
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        window.addEventListener('scroll', function() {
-            const navbar = document.querySelector('.navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
-        });
-    </script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
