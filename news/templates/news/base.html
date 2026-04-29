@@ -3,8 +3,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
     <title>{% block title %}NewsSentinel{% endblock %}</title>
+    <meta name="description" content="Real-time news with sentiment analysis">
+    <meta name="theme-color" content="#1a1a1a">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,17 +17,19 @@
 <body>
     <nav class="navbar">
         <div class="container">
-            <a class="navbar-brand" href="{% url 'dashboard' %}">
-                NewsSentinel
-            </a>
-            <div class="d-flex gap-2">
-                <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
-                <a class="nav-link" href="{% url 'news-home' %}">All News</a>
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <a class="navbar-brand" href="{% url 'dashboard' %}">
+                    NewsSentinel
+                </a>
+                <div class="d-flex gap-1">
+                    <a class="nav-link" href="{% url 'dashboard' %}">Dashboard</a>
+                    <a class="nav-link" href="{% url 'news-home' %}">All News</a>
+                </div>
             </div>
         </div>
     </nav>
 
-    <main>
+    <main class="container-fluid px-3 px-md-4">
         {% block content %}{% endblock %}
     </main>
 
