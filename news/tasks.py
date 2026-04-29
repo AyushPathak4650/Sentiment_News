@@ -8,6 +8,10 @@ logger = logging.getLogger(__name__)
 @shared_task(bind=True, max_retries=3)
 def fetch_and_save_articles(self):
     """Fetch news from API and save to database with sentiment analysis."""
+    if not hasattr(self, 'request'):
+        # Handle both sync and async calls
+        self = type('obj', (object,), {'retry': lambda **kwargs: None})()
+    
     try:
         from news.helpers import fetch_news, analyze_sentiment
         from news.models import NewsArticle

@@ -12,14 +12,28 @@ RATE_LIMIT_SECONDS = 300
 
 def api_fetch(request):
     if request.method == 'POST':
-        last_fetch = cache.get('last_fetch_time', 0)
-        if time.time() - last_fetch < RATE_LIMIT_SECONDS:
-            remaining = RATE_LIMIT_SECONDS - int(time.time() - last_fetch)
-            return JsonResponse({'error': f'Rate limited. Try again in {remaining}s'}, status=429)
+        # Verify API key (required)
+        api_key = request.POST.get('key') or request.GET.get('key')
+        expected_key = getattr(settings, 'FETCH_API_KEY', None)
+        if not expected_key or api_key != expected_key:
+            return JsonResponse({'error': 'Unauthorized - API key required'}, status=401)
         
-        cache.set('last_fetch_time', time.time())
-        result = fetch_and_save_articles.delay()
-        return JsonResponse({'status': 'started', 'task_id': result.id})
+        try:
+            last_fetch = cache.get('last_fetch_time', 0)
+            if time.time() - last_fetch < RATE_LIMIT_SECONDS:
+                remaining = RATE_LIMIT_SECONDS - int(time.time() - last_fetch)
+                return JsonResponse({'error': f'Rate limited. Try again in {remaining}s'}, status=429)
+            
+            cache.set('last_fetch_time', time.time())
+        except Exception as e:
+            # Proceed even if cache fails
+            pass
+        
+        try:
+            result = fetch_and_save_articles.delay()
+            return JsonResponse({'status': 'started', 'task_id': result.id})
+        except Exception as e:
+            return JsonResponse({'error': f'Failed to start task: {str(e)}'}, status=500)
     return JsonResponse({'error': 'POST required'}, status=405)
 
 urlpatterns = [

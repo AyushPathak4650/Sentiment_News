@@ -2,7 +2,9 @@ from django.shortcuts import render
 from .models import NewsArticle
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.db.models import Q, Count
+from django.db.models.functions import TruncHour
 from django.http import Http404
+from django.utils import timezone
 
 
 def dashboard(request):
@@ -18,7 +20,8 @@ def dashboard(request):
             Q(source_name__icontains=search_term)
         )
     
-    latest_100 = list(articles_qs[:100])
+    # Limit to 1000 articles for performance, then get top 100 for stats
+    latest_100 = list(articles_qs[:1000][:100])
     
     stats = {'positive': 0, 'negative': 0, 'neutral': 0}
     for article in latest_100:
@@ -36,6 +39,10 @@ def dashboard(request):
     source_names = [s['source_name'] for s in sources]
     source_counts = [s['count'] for s in sources]
     
+    # Get last fetch time
+    last_article = NewsArticle.objects.order_by('-created_at').first()
+    last_updated = last_article.created_at if last_article else None
+    
     paginator = Paginator(latest_100, 9)
     page = request.GET.get('page', 1)
     
@@ -51,6 +58,7 @@ def dashboard(request):
         'total_articles': NewsArticle.objects.count(),
         'source_names': source_names,
         'source_counts': source_counts,
+        'last_updated': last_updated,
     }
     return render(request, 'news/dashboard.html', context)
 
@@ -67,7 +75,8 @@ def home(request):
     except PageNotAnInteger:
         articles = paginator.page(1)
     except EmptyPage:
-        articles = paginator.page(paginator.num_pages)
+        # If page is too high, show last page
+        articles = paginator.page(paginator.num_pages) if paginator.num_pages > 0 else paginator.page(1)
     
     context = {
         'articles': articles,

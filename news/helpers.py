@@ -112,7 +112,13 @@ def fetch_news(query, days=3):
     
     NEWS_API_KEY = config('NEWS_API_KEY', default='')
     if not NEWS_API_KEY:
-        logger.warning("NEWS_API_KEY not configured")
+        logger.error("NEWS_API_KEY not configured - news fetching disabled")
+        return []
+    
+    # Sanitize query to prevent injection
+    query = str(query).strip()[:100]
+    if not query:
+        logger.warning("Empty query provided")
         return []
     
     BASE_URL = 'https://newsapi.org/v2/'

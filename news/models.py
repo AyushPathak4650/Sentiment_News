@@ -17,13 +17,15 @@ class NewsArticle(models.Model):
     published_at = models.DateTimeField()
     image_url = models.URLField(blank=True, null=True)
     sentiment = models.CharField(max_length=10, choices=SENTIMENT_CHOICES, default='Neutral')
-    sentiment_score = models.FloatField(null=True, blank=True, help_text="Raw sentiment score (-1 to 1)")
+    sentiment_score = models.FloatField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         ordering = ['-published_at']
         indexes = [
             models.Index(fields=['-published_at']),
             models.Index(fields=['sentiment']),
+            models.Index(fields=['created_at']),
         ]
 
     def __str__(self):

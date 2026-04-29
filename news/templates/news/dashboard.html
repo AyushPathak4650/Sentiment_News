@@ -45,7 +45,7 @@
 
 <div class="section-header">
     <h2>Latest News</h2>
-    <p>{{ total_articles|default:0 }} articles</p>
+    <p>{% if last_updated %}{{ last_updated|timesince }} ago{% else %}0 articles{% endif %}</p>
 </div>
 
 <div class="news-grid">
